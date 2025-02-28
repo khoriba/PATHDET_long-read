@@ -56,17 +56,17 @@ path4=$path0/${OUT}_tbl
 path5=$path0/${OUT}_map
 
 ##DataBase
-PATHD=/n001_share01/gbt/Project/259_NIID/25912/Data/db_20250226
-GRCH38="${PATHD}/kraken2/human"
-HUMAN="${PATHD}/hg38.fa"
-NT=${PATHD}/blast/nt/nt
-HOST2=${PATHD}/blast/t2t/GCF_009914755.1_T2T-CHM13v2.0_genomic
-PATHDB1=${PATHD}/kraken2/k2_pluspf_20241228
-path_ng=${PATHD}/ncbi_genome
-MASHDB=${PATHD}/mash/RefSeq88n.msh
+datadir="/path/to/datadir"
+GRCH38="${datadir}/kraken2/human"
+HUMAN="${datadir}/hg38.fa"
+NT=${datadir}/blast/nt/nt
+HOST2=${datadir}/blast/t2t/GCF_009914755.1_T2T-CHM13v2.0_genomic
+PATHDB1=${datadir}/kraken2/k2_pluspf_20241228
+path_ng=${datadir}/ncbi_genome
+MASHDB=${datadir}/mash/RefSeq88n.msh
 
 spark=$CONDA_PREFIX/opt/git/SparK/SparK.py
-export TAXONKIT_DB=${PATHD}/taxonkit/taxdump
+export TAXONKIT_DB=${datadir}/taxonkit/taxdump
 
 function p01_qc () {
   ## ===========================
