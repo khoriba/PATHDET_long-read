@@ -1,9 +1,6 @@
 #!/bin/bash
 
-set -u
-
-cd Data
-THREADS=64
+THREADS=20
 SPLIT=50000
 LEN=1000
 DEBUG=False
@@ -45,8 +42,9 @@ elif [ ! -f "$FQ1" ]; then
 fi
 
 ##PATH
-path0=output/${OUT}
-mkdir -p $path0
+path0=${OUT}
+mkdir -p $OUT
+OUT=`basename $OUT`
 
 path1=$path0/${OUT}_qc
 path2=$path0/${OUT}_hgs
@@ -67,6 +65,8 @@ MASHDB=${datadir}/mash/RefSeq88n.msh
 
 spark=$CONDA_PREFIX/opt/git/SparK/SparK.py
 export TAXONKIT_DB=${datadir}/taxonkit/taxdump
+
+set -u
 
 function p01_qc () {
   ## ===========================
@@ -238,27 +238,27 @@ function rapid () {
       echo -e "\t* un-classified read: ${UKK2}reads (${UCR}%)" >> ${pathr}/${OUTL}
     fi
   
-    if [ ! -f ${pathr}/.${OUT}_kraken_prompt_report.done ]; then
-      if [ -f ${pathr}/.${OUT}_kraken_p1.done ]; then
-    
-        local PRstd=`echo "scale=0; ${HG2} * 1000000 / ${WCA1}" | bc`
-    
-        local RMDA2=`grep 'Number of reads' ${path1}/${OUT}_qc2/NanoStats.txt | sed -e 's/^Number of reads:\s\+\([0-9,]\+\)\.0$/\1/' | sed -e 's/,//g'`
-    
-        ##Prompt report
-        mkdir -p ${pathr}/${OUT}_pRep
-        echo -e "Sample_ID\t${OUT}" >> ${pathr}/${OUT}_pRep/${OUTP}
-        echo -e "Total_read(reads)\t${WCA1}" >> ${pathr}/${OUT}_pRep/${OUTP}
-        echo -e "Available_read(reads)\t${RMDA2}" >> ${pathr}/${OUT}_pRep/${OUTP}
-        echo -e "Non-human_read(reads)\t${HG2}" >> ${pathr}/${OUT}_pRep/${OUTP}
-        echo -e "Non-human_read(RPM)\t${PRstd}" >> ${pathr}/${OUT}_pRep/${OUTP}
-        
+    local PRstd=`echo "scale=0; ${HG2} * 1000000 / ${WCA1}" | bc`
+    local RMDA2=`grep 'Number of reads' ${path1}/${OUT}_qc2/NanoStats.txt | sed -e 's/^Number of reads:\s\+\([0-9,]\+\)\.0$/\1/' | sed -e 's/,//g'`
+    if [ -f ${pathr}/.${OUT}_kraken_p1.done ]; then
+      ##Prompt report
+      mkdir -p ${pathr}/${OUT}_pRep
+      echo -e "Sample_ID\t${OUT}" >> ${pathr}/${OUT}_pRep/${OUTP}
+      echo -e "Total_read(reads)\t${WCA1}" >> ${pathr}/${OUT}_pRep/${OUTP}
+      echo -e "Available_read(reads)\t${RMDA2}" >> ${pathr}/${OUT}_pRep/${OUTP}
+      echo -e "Non-human_read(reads)\t${HG2}" >> ${pathr}/${OUT}_pRep/${OUTP}
+      echo -e "Non-human_read(RPM)\t${PRstd}" >> ${pathr}/${OUT}_pRep/${OUTP}
+      
+      if [ ! -f ${pathr}/KK2/.${OUT}_p2.kreport.done ]; then
         ktImportTaxonomy \
           -q 2 -t 3 -s 4 \
           ${pathr}/KK2/${OUT}_kraken_p1.txt \
           -o ${pathr}/${OUT}_pRep/${OUT}.plot.html
           grep -v 'unclassified' ${pathr}/KK2/${OUT}_p1.kreport | cut -f3,5 | /bin/awk -F, '$1 > 1{ print $0 }' >  ${pathr}/KK2/${OUT}_p2.kreport
+        if [ $? -eq 0 ]; then touch ${pathr}/KK2/.${OUT}_p2.kreport.done; fi
+      fi
     
+      if [ ! -f ${pathr}/.${OUT}_kraken_prompt_report.done ] && [ -f ${pathr}/KK2/.${OUT}_p2.kreport.done ]; then
         cat ${pathr}/KK2/${OUT}_p2.kreport | \
           /bin/awk '{ tax[$2] += $1; } END { for (i in tax) print tax[i] "\t" i; }' | sort -k 1nr,1 | \
         taxonkit lineage -i 2 \
@@ -269,7 +269,7 @@ function rapid () {
         #Remove C.acnes
         #grep -v acnes ${pathr}/KK2/${OUT}_tax2.kreport > ${pathr}/KK2/${OUT}_tax3.kreport
         #grep -v acnes ${pathr}/KK2/${OUT}_tax.kreport > ${pathr}/KK2/${OUT}_tax3r.kreport
-    
+      
         #Create CSV file for each taxonomic rank
         mkdir -p ${pathr}/CSV
         
@@ -317,7 +317,7 @@ function rapid () {
         
         paste ${pathr}/CSV/${OUT}_rpF.csv ${pathr}/CSV/${OUT}_mpF.csv | cut -f 1,2,4,5\
          > ${pathr}/${OUT}_pRep/${OUT}_pF1.csv
-    
+      
         #Genus
         taxonkit reformat -j 8 -i 3 -f {g} ${pathr}/KK2/${OUT}_tax2.kreport\
          | cut -f 1,4- | sed 's/ /_/g' | /bin/awk '{ tax[$2] += $1; } END { for (i in tax) print i "\t" tax[i]; }'\
@@ -393,7 +393,7 @@ function rapid () {
         S1=`expr ${PT1} \% 60`
         BRKS=`date '+%y%m%d%H%M%S'`
         echo "${BRKS} Kraken REPORT finished (${H1}:${M1}:${S1})" >> ${pathr}/${OUTL}
-    
+      
         touch ${pathr}/.${OUT}_kraken_prompt_report.done
       fi
     else

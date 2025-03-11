@@ -10,12 +10,30 @@ TIMEA=`date +%s`
 ##TAX='K','F','G','S','Fungi','Virus'
 TAX="$1"
 OUT="$2"
+
+##PATH
+#PATH0=output
+#PATH1=output_comp/${START}_${OUT}
+PATH1=${OUT}
+PATH2=$PATH1/${OUTI}
+OUT=`basename $OUT`
 OUTI=${OUT}_int
 OUTL=${OUT}_log.txt
 
+if [ -z "$TAX" ] || [ -z "$OUT" ]; then
+  echo "two arguments are required"
+  exit
+fi
+
+if [ -d "$OUT" ]; then
+  echo "$OUT directory already exists"
+  exit
+fi
+
 ##PATH
-PATH0=output
-PATH1=output_comp/${START}_${OUT}
+#PATH0=output
+#PATH1=output_comp/${START}_${OUT}
+PATH1=${OUT}
 PATH2=$PATH1/${OUTI}
 
 ##Output directory
@@ -30,7 +48,7 @@ mkdir -p ${PATH2}/COL3
 
 exec 2> ${PATH2}/er.log
 
-dirs=`find $PATH0/*/*_tbl/*_fRep/ -size +1c -type f -name *${TAX}.csv | sort`
+dirs=`find ./*/*_tbl/*_fRep/ -size +1c -type f -name *${TAX}.csv | sort`
 
 for dir in ${dirs} ;
 do
