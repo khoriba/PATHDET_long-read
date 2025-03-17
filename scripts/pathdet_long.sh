@@ -26,7 +26,7 @@ while [ $# -gt 0 ] ; do
     --debug        ) DEBUG=True
                      shift ;;
                  * ) echo "ERROR : illegal option"
-                     echo "you need to supply path to fastq using -1 and -2 option, and output name using -o/--out option"
+                     echo "you need to supply path to fastq using -i option, and output name using -o/--out option"
                      echo "you could overwrite thread number using -t/--threads option, 64 by default"
                      echo "you could overwrite split number using -s/--split option, 50000 by default"
                      exit ;;
@@ -34,7 +34,7 @@ while [ $# -gt 0 ] ; do
 done
 
 if [ -z "$FQ1" ] || [ -z "$OUT" ]; then
-  echo "you need to supply path to fastq using -1 and -2 option, and output name using -o option"
+  echo "you need to supply path to fastq using -i option, and output name using -o option"
   exit
 elif [ ! -f "$FQ1" ]; then
   echo "fastq file does NOT exists"
@@ -85,14 +85,14 @@ function p01_qc () {
     seqkit stats -j $THREADS ${FQ1} >> ${path1}/${OUTL}
   
     ##QC_1st
-    NanoPlot --fastq ${FQ1} --loglength -t $THREADS -o ${path1}/${OUT}_qc1
+    NanoPlot --no_static --fastq ${FQ1} --loglength -t $THREADS -o ${path1}/${OUT}_qc1
   
     ##Trimming, default_length=1,000
     gzip -dc ${FQ1} > ${path1}/${OUT}_L.fastq
     NanoFilt ${path1}/${OUT}_L.fastq -q 10 --headcrop 50 -l ${LEN} > ${path1}/${OUT}_trimmed_L.fastq
   
     ##QC_2nd
-    NanoPlot --fastq ${path1}/${OUT}_trimmed_L.fastq --loglength -t $THREADS -o ${path1}/${OUT}_qc2
+    NanoPlot --no_static --fastq ${path1}/${OUT}_trimmed_L.fastq --loglength -t $THREADS -o ${path1}/${OUT}_qc2
   
     QC=`date '+%y%m%d%H%M%S'`
     echo "${QC} ${OUT} trimmed FQ stats" >> ${path1}/${OUTL}
