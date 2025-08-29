@@ -265,11 +265,12 @@ These dependencies ensure reproducibility of the pipeline.
 * PATHDET is not responsible for the accuracy, equivalence, and completeness of the analysis results.
 
 ## Usage Policy
-* Prior to uploading personal sequencing data to PATHDET, the users must remove the sequence reads derived from the individuals to a level unable to identify the personal information.
-* The use of personal sequence data for PATHDET should be approved by the institutional review board and by the supervisor of the users’ researches.
-* PATHDET cannot be used to diagnose, treat, prevent, or alleviate a disease or other condition in man or other animals.
-* The users are allowed to use PATHDET for academic and non-profit purposes but not commercial purposes.
-* Users’ personal information (e-mail address) is only used for the announcement of analysis submission and completion.
-* PATHDET deletes the sequence reads immediately after completion of the analyses and does not use or provide the sequence data for any other purposes.
+* PATHDET is provided as a **command-line pipeline** to be executed in local or HPC environments.  
+  Users are fully responsible for ensuring appropriate handling of sequencing data.
+* Prior to analysis, **human or other host-derived reads containing identifiable personal information** should be removed or masked as required by applicable laws, regulations, and institutional policies.
+* PATHDET is free to use for **academic and non-profit purposes**.  
+  Commercial use is not permitted without prior approval.
+* Since this version runs entirely in local or institutional computing environments, **no sequence data is transmitted externally**.  
+  Users are responsible for appropriate data storage, retention, and deletion policies within their institution.
 
 ![](https://pathdet.hgc.jp/files/static/images/footer.png)
