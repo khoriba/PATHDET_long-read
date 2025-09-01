@@ -117,9 +117,7 @@ CHM13v2.0/GCF_009914755.1_T2T-CHM13v2.0_genomic.fna.gz
 Prepare sequencing data from Illumina (or other-type short-read sequencers) in **paired-end FASTQ format**.
 
 #### Requirements
-- **Read 1 FASTQ file** (e.g., `sample_R1.fastq.gz`)
-- **Read 2 FASTQ file** (e.g., `sample_R2.fastq.gz`)
-- Both files must correspond to the same sample.
+- **FASTQ file** (e.g.,`sample_L.fastq.gz`)
 
 ### 4. Example: Running the Analysis Pipeline
 Before running, make sure the conda environment is active:
@@ -160,8 +158,7 @@ $ conda activate pathdet_env
 When running with `-o sample`, the following directories and files are generated:
 
 - `sample_qc/`  
-  - `sample_trimmed2_R1.fastq.gz`  
-  - `sample_trimmed2_R2.fastq.gz`  
+  - `sample_trimmed_L.fastq.gz`  
   *→ Cleaned read data after quality control*
 
 - `sample_hgs/`  
