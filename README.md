@@ -125,12 +125,12 @@ Before running, make sure the conda environment is active:
 ```
 $ conda activate pathdet_env
 ```
-####Command
+#### Command
 ```
 (pathdet_env)$ pathdet_long.sh -i sample.fastq.gz -o sample \
 -t 16 -s 10000 -l 1000
 ```
-####Option
+#### Option
 
 - `-i <file>`  
   Path to **FASTQ file** (required)
