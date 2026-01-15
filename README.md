@@ -30,6 +30,10 @@ $ conda env create -f pathdet_env.yaml
 
 # Activate PATHDET environment
 $ conda activate pathdet_env
+
+# Installing SparK 
+(pathdet_env)$ git clone https://github.com/harbourlab/SparK.git $CONDA_PREFIX/opt/git/SparK
+(pathdet_env)$ cp /path/to/deliv/scripts/* $CONDA_PREFIX/bin/
 ```
 
 ### 2. Prepare reference databases
