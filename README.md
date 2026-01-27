@@ -66,6 +66,15 @@ Edit the variable `datadir` in the script `pathdet_short.sh` (around line 67) to
 ## Database
 datadir="/path/to/datadir"   # <-- change this line
 ```
+
+- Building the databases required for PATHDET is computationally intensive, requiring large amounts of memory and substantial execution time. Using pre-built databases enables the utilisation of a relatively new database even without computational resources.
+
+  - cf. Pre-built database sources<br>
+      - Kraken2 databases (pre-built): PATHDET uses the Kraken2 PlusPF database.<br>
+        Available from: <https://benlangmead.github.io/aws-indexes/k2><br>
+      - BLAST nt database (pre-built) :PATHDET expects the nt.*.tar.gz archive format.<br>
+        Available from: <https://ftp.ncbi.nlm.nih.gov/blast/db/><br>
+
 - If you set up the environment manually, follow the steps below.
 
 
